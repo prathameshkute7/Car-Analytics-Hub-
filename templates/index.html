@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAR ANALYTICS HUB</title>
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="{{ url_with_timestamp('static/style.css') if url_with_timestamp else url_for('static', filename='style.css') }}">
+    
+    <!-- 📊 Chart.js Library (Essential for interactive graphs) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="header">
+        <h1>CAR ANALYTICS HUB</h1>
+    </div>
+
+    <!-- 🔍 1. Advanced Filter Bar (For Budget and Body Type) -->
+    <!-- 🔍 Simplified Filter Bar (To select Company and Vehicle) -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <label for="companySelect">Select Company</label>
+            <select id="companySelect" onchange="filterCarsByCompany()">
+                <option value="All">All Companies</option>
+                <option value="Mahindra">Mahindra</option>
+                <option value="Tata">Tata</option>
+                <option value="Maruti Suzuki">Maruti Suzuki</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Honda">Honda</option>
+                <option value="Jeep">Jeep</option>
+                <option value="BMW">BMW</option>
+                <option value="Mercedes-Benz">Mercedes-Benz</option>
+                <option value="Audi">Audi</option>
+            </select>
+        </div>
+
+        <div class="filter-group" style="margin-left: 20px;">
+            <label for="carSelect">Select Vehicle</label>
+            <select id="carSelect" onchange="loadCarData()">
+                {% for name in car_names %}
+                <option value="{{ name }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <button class="load-btn" onclick="loadCarData()">Load Data ⚡</button>
+    </div>
+
+    <!-- 📑 Main Dashboard Layout -->
+    <div class="dashboard-grid">
+        
+        <!-- Left Section: Single Car Details -->
+        <div class="card">
+            <h2 id="carTitle">Car Name</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Specification</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Brand</td>
+                        <td id="tableBrand">-</td>
+                    </tr>
+                    <tr>
+                        <td>Body Type</td>
+                        <td id="tableType">-</td>
+                    </tr>
+                    <tr>
+                        <td>Price</td>
+                        <td id="tablePrice" class="highlight-text">-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 30px;">
+                <h2>Expert Overview</h2>
+                <p id="carDesc" style="font-style: italic; color: #ccc; line-height: 1.6;">-</p>
+            </div>
+        </div>
+
+        <!-- Right Section: Performance Standings and Specifications -->
+        <div class="card">
+            <h2>Performance Standings</h2>
+            
+            <div class="spec-row">
+                <div class="spec-info">
+                    <span>Horsepower (HP)</span>
+                    <span id="hpValue">0 HP</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="hpBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="spec-row">
+                <div class="spec-info">
+                    <span>Top Speed (km/h)</span>
+                    <span id="speedValue">0 km/h</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="speedBar" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 30px;">Detailed Specifications</h2>
+            <table class="specs-table">
+                <tbody>
+                    <tr>
+                        <td>Engine Options</td>
+                        <td id="infoEngine" class="highlight-text" style="color: #ffeb3b;">-</td>
+                    </tr>
+                    <tr>
+                        <td>Fuel Type</td>
+                        <td id="infoFuel">-</td>
+                    </tr>
+                    <tr>
+                        <td>Claimed Mileage</td>
+                        <td id="infoMileage">-</td>
+                    </tr>
+                    <tr>
+                        <td>Capacity</td>
+                        <td id="infoSeats">-</td>
+                    </tr>
+                    <tr>
+                        <td>Safety Rating</td>
+                        <td id="infoSafety" style="color: #4caf50; font-weight: bold;">-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="header" style="margin-top: 40px;">
+        <h1>⚖️ Live Car Comparison & Images</h1>
+    </div>
+
+    <div class="filter-bar" style="background-color: #1a1a1a; border: 1px solid #333;">
+        <div class="filter-group">
+            <label>Compare Car 1</label>
+            <select id="carSelect1" onchange="loadComparison()"></select>
+        </div>
+        <div class="filter-group" style="margin-left: 20px;">
+            <label>Compare Car 2</label>
+            <select id="carSelect2" onchange="loadComparison()"></select>
+        </div>
+    </div>
+
+    <div class="dashboard-grid" style="margin-bottom: 40px;">
+        <!-- Car 1 Comparison Card -->
+        <div class="card" style="border-top: 3px solid #ffeb3b;">
+            <h2 id="carTitle1">Car 1</h2>
+            <img id="carImg1" src="" alt="Car 1" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; display: none;">
+            <p><strong>Brand/Type:</strong> <span id="brand1">-</span></p>
+            <p style="margin: 8px 0;"><strong>Price:</strong> <span id="price1" class="highlight-text">-</span></p>
+            <p><strong>Power / Speed:</strong> <span id="hpSpeed1">-</span></p>
+            <p style="margin: 8px 0;"><strong>Mileage / Safety:</strong> <span id="extra1">-</span></p>
+            <p id="desc1" style="font-size: 13px; color: #aaa; margin-top: 10px; line-height: 1.4;">-</p>
+        </div>
+
+        <!-- Car 2 Comparison Card -->
+        <div class="card" style="border-top: 3px solid #ffeb3b;">
+            <h2 id="carTitle2">Car 2</h2>
+            <img id="carImg2" src="" alt="Car 2" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 4px; margin-bottom: 15px; display: none;">
+            <p><strong>Brand/Type:</strong> <span id="brand2">-</span></p>
+            <p style="margin: 8px 0;"><strong>Price:</strong> <span id="price2" class="highlight-text">-</span></p>
+            <p><strong>Power / Speed:</strong> <span id="hpSpeed2">-</span></p>
+            <p style="margin: 8px 0;"><strong>Mileage / Safety:</strong> <span id="extra2">-</span></p>
+            <p id="desc2" style="font-size: 13px; color: #aaa; margin-top: 10px; line-height: 1.4;">-</p>
+        </div>
+    </div>
+
+    <!-- 📈 3. Interactive Charts Section -->
+    <div class="header">
+        <h1>📊 Market Analytics Graph (HP vs Mileage)</h1>
+    </div>
+    <div class="card" style="margin-bottom: 40px; height: 400px; position: relative;">
+        <canvas id="carChart"></canvas>
+    </div>
+
+    <!-- Link to your JavaScript file -->
+    <script src="{{ url_with_timestamp('static/script.js') if url_with_timestamp else url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+/* CSS: Dark theme and layout design */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body { 
+    background-color: #111111;
+    color: #fff;
+    padding: 20px;
+}
+
+.header { 
+    border-bottom: 2px solid #e10600;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.header h1 { 
+    color: #e10600;
+    font-size: 24px;
+    letter-spacing: 1px;
+}
+
+.filter-bar { 
+    background-color: #222;
+    padding: 15px;
+    border-radius: 5px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Wrap new filters to the next line based on screen size */
+}
+
+.filter-group { 
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label { 
+    font-size: 11px;
+    color: #aaa;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+select { 
+    background-color: #333;
+    color: white;
+    border: 1px solid #444;
+    padding: 8px 15px;
+    border-radius: 4px;
+    width: 220px; /* Adjusted width slightly so everything fits in one line */
+    outline: none;
+}
+
+.load-btn { 
+    background-color: #e10600;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: auto;
+    text-transform: uppercase;
+    transition: 0.2s;
+}
+
+.load-btn:hover { 
+    background-color: #b80500;
+}
+
+.dashboard-grid { 
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Give both cars 50-50% space side by side */
+    gap: 20px;
+}
+
+.card { 
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 5px;
+    border-top: 3px solid #e10600;
+}
+
+.card h2 { 
+    color: #e10600;
+    font-size: 18px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+table { 
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th { 
+    color: #aaa;
+    font-size: 12px;
+    text-transform: uppercase;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+}
+
+td { 
+    padding: 12px 10px;
+    border-bottom: 1px solid #222;
+    font-size: 14px;
+}
+
+.highlight-text { 
+    color: #ffeb3b;
+    font-weight: bold;
+}
+
+.spec-row { 
+    margin-bottom: 15px;
+}
+
+.spec-info { 
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.progress-bar { 
+    background-color: #333;
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-fill { 
+    background-color: #e10600;
+    height: 100%;
+    width: 0%;
+    transition: width 0.6s ease-in-out;
+}
+
+/* --- Images and responsive styling added here for the new layout --- */
+
+/* Hover effect for car images */
+.card img {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #333;
+}
+
+.card img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(225, 6, 0, 0.3);
+}
+
+/* If the screen is small or mobile-sized, comparison stacks vertically */
+@media (max-width: 768px) {
+    .dashboard-grid { 
+        grid-template-columns: 1fr; 
+    }
+    select {
+        width: 100%;
+    }
+    .load-btn {
+        width: 100%;
+        margin-left: 0;
+    }
+}
