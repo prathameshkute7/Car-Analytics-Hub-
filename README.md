@@ -58,7 +58,7 @@ python app.py
 Open your browser and visit:
 
 ```
-(https://car-analytics-hub.onrender.com)
+[Live Demo](https://car-analytics-hub.onrender.com)
 ```
 
 ## 📡 API Endpoints
